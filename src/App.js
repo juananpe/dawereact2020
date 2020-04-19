@@ -65,11 +65,11 @@ class App extends Component {
         return (
             <div className="page">
                 <div className="interactions">
-                    <Search value={searchTerm}
-                            onChange={this.onSearchChange}>
+                <Search value={searchTerm}
+                        onChange={this.onSearchChange}>
 
-                        Search
-                    </Search>
+                    Search
+                </Search>
                 </div>
                 <Table list={list}
                        pattern={searchTerm}
@@ -80,37 +80,37 @@ class App extends Component {
 }
 
 const Search = ({value, onChange, children}) =>
-    <form>
-        {children}
-        <input type="text"
-               value={value}
-               onChange={onChange}
-        />
-    </form>;
+        <form>
+            {children}
+            <input type="text"
+                   value={value}
+                   onChange={onChange}
+            />
+        </form>;
 
 class Table extends Component {
     render() {
 
-        const {list, onDismiss} = this.props;
+        const {list, pattern, onDismiss} = this.props;
 
         return (
             <div className="table">
-                {list.map(item => {
+                {list.filter(isSearched(pattern)).map(item => {
                     return <div key={item.objectID} className="table-row">
 
-                   <span style={{width: '40%'}}>
+                   <span style={{ width: '40%' }}>
                   <a href={item.url}>{item.title}</a>
                 </span>
-                        <span style={{width: '30%'}}>
+                        <span style={{ width: '30%' }}>
                   {item.author}
                 </span>
-                        <span style={{width: '10%'}}>
+                        <span style={{ width: '10%' }}>
                   {item.num_comments}
                 </span>
-                        <span style={{width: '10%'}}>
+                        <span style={{ width: '10%' }}>
                   {item.points}
                 </span>
-                        <span style={{width: '10%'}}>
+                        <span style={{ width: '10%' }}>
                   <Button
                       onClick={() => onDismiss(item.objectID)}
                       className="button-inline"
@@ -122,19 +122,19 @@ class Table extends Component {
                     </div>;
                 })}
             </div>
-        )
+            )
     }
 }
 
 class Button extends Component {
     render() {
-        const {onClick, className = '', children,} = this.props;
+        const {onClick, className='', children, } = this.props;
         return (
             <button className="button-inline"
-                    onClick={onClick}
-                    className={className}
-                    type="button"
-            >{children}</button>
+                onClick={onClick}
+                className={className}
+                type="button"
+                >{children}</button>
         )
     }
 }
