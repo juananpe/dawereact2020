@@ -1,26 +1,11 @@
 import React, {Component} from 'react';
 import './App.css';
 
+const DEFAULT_QUERY = 'react';
+const PATH_BASE = 'https://hn.algolia.com/api/v1';
+const PATH_SEARCH = '/search';
+const PARAM_SEARCH = 'query=';
 
-const list = [
-    {
-        title: 'React',
-        url: 'https://facebook.github.io/react/',
-        author: 'Jordan Walke',
-        num_comments: 3,
-        points: 4,
-        objectID: 0,
-
-    },
-    {
-        title: 'Redux',
-        url: 'https://github.com/reactjs/redux',
-        author: 'Dan Abramov, Andrew Clark',
-        num_comments: 2,
-        points: 5,
-        objectID: 1,
-    }
-];
 
 function isSearched(searchTerm) {
     return function (item) {
@@ -34,12 +19,25 @@ class App extends Component {
         super(props);
 
         this.state = {
-            list,
-            searchTerm: '',
+            result : null,
+            searchTerm: DEFAULT_QUERY,
         };
 
         this.onDismiss = this.onDismiss.bind(this);
         this.onSearchChange = this.onSearchChange.bind(this);
+        this.setSearchTopStories = this.setSearchTopStories.bind(this);
+    }
+
+    setSearchTopStories(result){
+        this.setState({result});
+    }
+
+    componentDidMount() {
+        const {searchTerm} = this.state;
+        fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
+            .then(response => response.json())
+            .then(result => this.setSearchTopStories(result))
+            .catch(error => error);
     }
 
     onSearchChange(event) {
@@ -60,7 +58,9 @@ class App extends Component {
 
     render() {
 
-        const {list, searchTerm} = this.state;
+        const {result, searchTerm} = this.state;
+
+        if (!result) return null;
 
         return (
             <div className="page">
@@ -71,7 +71,7 @@ class App extends Component {
                     Search
                 </Search>
                 </div>
-                <Table list={list}
+                <Table list={result.hits}
                        pattern={searchTerm}
                        onDismiss={this.onDismiss}/>
             </div>
