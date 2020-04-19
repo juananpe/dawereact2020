@@ -91,7 +91,7 @@ const Search = ({value, onChange, children}) =>
 class Table extends Component {
     render() {
 
-        const {list, pattern, onDismiss} = this.props;
+        const {list, onDismiss} = this.props;
 
         return (
             <div className="table">
